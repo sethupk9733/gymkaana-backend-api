@@ -1,0 +1,13 @@
+[dotenv@17.2.3] injecting env (3) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Connecting to MongoDB: mongodb://localhost:27017/gymkaana
+Connected to MongoDB for seeding...
+Creating Test Accounts...
+Error seeding data: TypeError: next is not a function
+    at model.<anonymous> (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\models\User.js:35:5)
+    at async Kareem.execPre (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\node_modules\kareem\index.js:65:24)
+    at async model.$__save (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\node_modules\mongoose\lib\model.js:609:5)
+    at async C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\node_modules\mongoose\lib\model.js:2714:9
+    at async Promise.all (index 0)
+    at async model.create (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\node_modules\mongoose\lib\model.js:2699:11)
+    at async seedData (C:\Users\sethu\OneDrive\Desktop\gymkaana owner\backend-api\seed.js:60:23)
