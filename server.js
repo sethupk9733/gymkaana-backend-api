@@ -37,9 +37,13 @@ mongoose.connect(process.env.MONGODB_URI, {
         console.log('CRITICAL: Ensure MongoDB is running on localhost:27017 or update MONGODB_URI in .env');
     });
 
-// Basic Route
+// Basic Routes
 app.get('/', (req, res) => {
-    res.send('Gymkaana API is running...');
+    res.json({ status: 'success', message: 'Gymkaana API is running...' });
+});
+
+app.get('/api', (req, res) => {
+    res.json({ status: 'success', message: 'Gymkaana API root reached. Use /api/auth, /api/gyms, etc.' });
 });
 
 // Debug endpoint to check gym data
