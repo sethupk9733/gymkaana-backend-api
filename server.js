@@ -154,8 +154,13 @@ app.use('/api/payouts', require('./routes/payoutRoutes'));
 app.use('/api/accounting', require('./routes/accountingRoutes'));
 app.use('/api/tickets', require('./routes/ticketRoutes'));
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+// 404 Handler - MUST BE AFTER ALL ROUTES
+app.use((req, res) => {
+    console.log(`404 - Not Found: ${req.method} ${req.originalUrl}`);
+    res.status(404).json({
+        message: `Route ${req.method} ${req.url} not found`,
+        error: 'Not Found'
+    });
 });
 
 // Global Error Handler
@@ -165,4 +170,8 @@ app.use((err, req, res, next) => {
         message: err.message || 'Internal Server Error',
         error: process.env.NODE_ENV === 'development' ? err : {}
     });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
