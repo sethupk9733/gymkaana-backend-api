@@ -1,0 +1,64 @@
+Database Report
+================
+
+GYMS (6):
+- Name: sfs
+  Status: Approved
+  OwnerId: 696df5f3c5974a90136cb858
+
+- Name: gymkanna 
+  Status: Approved
+  OwnerId: 696df5f3c5974a90136cb858
+
+- Name: gymkanna 
+  Status: Approved
+  OwnerId: 696df5f3c5974a90136cb858
+
+- Name: whats up gym
+  Status: Approved
+  OwnerId: 696df5f3c5974a90136cb858
+
+- Name: i love gym 
+  Status: Approved
+  OwnerId: 69709457cbb8950d0c74b515
+
+- Name: i hate fat
+  Status: Approved
+  OwnerId: 69709457cbb8950d0c74b515
+
+USERS (7):
+- Name: Gymkaana Admin
+  Email: admin@gymkaana.com
+  Roles: ["admin"]
+  ID: 696df5f2c5974a90136cb856
+
+- Name: jonny
+  Email: owner@gymkaana.com
+  Roles: ["owner"]
+  ID: 696df5f3c5974a90136cb858
+
+- Name: barath2
+  Email: user@gymkaana.com
+  Roles: ["user"]
+  ID: 696df5f3c5974a90136cb85a
+
+- Name: sethu
+  Email: sethu9733@gmail.com
+  Roles: ["user"]
+  ID: 69708b441918743d92c78438
+
+- Name: set
+  Email: sethupk9733@gmail.com
+  Roles: ["owner"]
+  ID: 69709457cbb8950d0c74b515
+
+- Name: srrt
+  Email: user2@gymkaana.com
+  Roles: ["user"]
+  ID: 6996d55db7105d7dee2aea89
+
+- Name: sethu
+  Email: owner1@gymkaana.com
+  Roles: ["owner"]
+  ID: 6996edc8b7105d7dee2aef3a
+

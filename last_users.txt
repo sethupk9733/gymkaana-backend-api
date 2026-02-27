@@ -1,0 +1,5 @@
+EMAIL: sethu@gymkaana.com VERIFIED: true OTP: NONE
+EMAIL: owner1@gymkaana.com VERIFIED: false OTP: NONE
+EMAIL: user2@gymkaana.com VERIFIED: false OTP: NONE
+EMAIL: sethupk9733@gmail.com VERIFIED: false OTP: NONE
+EMAIL: sethu9733@gmail.com VERIFIED: true OTP: NONE

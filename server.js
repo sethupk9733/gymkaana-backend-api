@@ -30,7 +30,7 @@ app.use('/api/gyms', require('./routes/gymRoutes'));
 app.use('/api/plans', require('./routes/planRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
-// app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
