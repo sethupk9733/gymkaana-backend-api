@@ -9,18 +9,15 @@ exports.getPlansByGym = async (req, res) => {
     }
 };
 
-exports.getPlanById = async (req, res) => {
-    try {
-        const plan = await Plan.findById(req.params.id);
-        if (!plan) return res.status(404).json({ message: 'Plan not found' });
-        res.json(plan);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
-
 exports.createPlan = async (req, res) => {
-    const plan = new Plan(req.body);
+    const plan = new Plan({
+        gymId: req.body.gymId,
+        name: req.body.name,
+        price: req.body.price,
+        duration: req.body.duration,
+        description: req.body.description,
+        features: req.body.features
+    });
 
     try {
         const newPlan = await plan.save();
