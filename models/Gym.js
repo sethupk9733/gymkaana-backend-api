@@ -4,7 +4,7 @@ const gymSchema = new mongoose.Schema({
     name: { type: String, required: true },
     address: { type: String, required: true },
     rating: { type: Number, default: 0 },
-    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    status: { type: String, enum: ['pending', 'active', 'inactive', 'rejected'], default: 'pending' },
     members: { type: Number, default: 0 },
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Owner' },
     image: { type: String },
