@@ -44,7 +44,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // Basic Route
 app.get('/', (req, res) => {
-    res.send('Gymkaana API is running...');
+    res.json({ message: 'Gymkaana API is healthy', status: 'online' });
 });
 
 // Routes
@@ -53,7 +53,20 @@ app.use('/api/plans', require('./routes/planRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
+// 404 Handler for API routes
+app.use((req, res, next) => {
+    res.status(404).json({ message: `Route ${req.originalUrl} not found on this server` });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('🔥 Global Error:', err.stack);
+    res.status(500).json({
+        message: 'Internal Server Error',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+});
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`🚀 Server is running on port ${PORT}`);
 });
