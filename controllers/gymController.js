@@ -10,12 +10,16 @@ exports.getAllGyms = async (req, res) => {
 };
 
 exports.createGym = async (req, res) => {
-    console.log('🏗️ Incoming Gym Creation Request | Body:', req.body, '| User:', req.user?._id);
+    console.log('🏗️ Incoming Gym Creation Request | Body Keys:', Object.keys(req.body), '| User:', req.user?._id);
+
+    // Normalize status to lowercase if provided
+    const status = (req.body.status || 'pending').toLowerCase();
+
     const gym = new Gym({
         name: req.body.name,
         address: req.body.address,
         rating: req.body.rating || 0,
-        status: req.body.status || 'pending',
+        status: status, // Use normalized status
         members: req.body.members || 0,
         image: req.body.image,
         ownerId: req.user._id // Critical: assign owner from current user
@@ -27,7 +31,10 @@ exports.createGym = async (req, res) => {
         res.status(201).json(newGym);
     } catch (err) {
         console.error('❌ Error saving gym:', err.message);
-        res.status(400).json({ message: err.message });
+        res.status(400).json({
+            message: `Gym validation failed: ${err.message}`,
+            receivedBody: req.body // Send back what we received for debugging
+        });
     }
 };
 
