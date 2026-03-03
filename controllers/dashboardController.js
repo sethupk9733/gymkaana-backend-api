@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Gym = require('../models/Gym');
 const Booking = require('../models/Booking');
+const User = require('../models/User');
 
 exports.getStats = async (req, res) => {
     try {
@@ -14,6 +15,9 @@ exports.getStats = async (req, res) => {
 
         const totalGyms = await Gym.countDocuments(statsQuery);
         const pendingGyms = await Gym.countDocuments({ ...statsQuery, status: 'pending' });
+
+        // Count real registered users (not gym.members field)
+        const totalUsers = await User.countDocuments();
 
         const totalMembers = await Gym.aggregate([
             { $match: statsQuery },
@@ -40,7 +44,7 @@ exports.getStats = async (req, res) => {
 
         res.json({
             activeMembers: totalMembers[0]?.total || 0,
-            totalUsers: totalMembers[0]?.total || 0,
+            totalUsers,           // Real count of registered users
             totalRevenue: totalRevenue[0]?.total || 0,
             pendingGyms,
             checkInsToday: 0,
