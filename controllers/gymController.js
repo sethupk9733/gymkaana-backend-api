@@ -2,7 +2,7 @@ const Gym = require('../models/Gym');
 
 exports.getAllGyms = async (req, res) => {
     try {
-        const gyms = await Gym.find();
+        const gyms = await Gym.find().populate('ownerId', 'name email phoneNumber');
         res.json(gyms);
     } catch (err) {
         res.status(500).json({ message: err.message });
