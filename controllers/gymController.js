@@ -12,17 +12,17 @@ exports.getAllGyms = async (req, res) => {
 exports.createGym = async (req, res) => {
     console.log('🏗️ Incoming Gym Creation Request | Body Keys:', Object.keys(req.body), '| User:', req.user?._id);
 
-    // Normalize status to lowercase if provided
-    const status = (req.body.status || 'pending').toLowerCase();
+    if (Object.keys(req.body).length === 0) {
+        return res.status(400).json({ message: 'Empty body received. Check Content-Type header and body parser.' });
+    }
+
+    const { status: rawStatus, ...gymData } = req.body;
+    const status = (rawStatus || 'pending').toLowerCase();
 
     const gym = new Gym({
-        name: req.body.name,
-        address: req.body.address,
-        rating: req.body.rating || 0,
-        status: status, // Use normalized status
-        members: req.body.members || 0,
-        image: req.body.image,
-        ownerId: req.user._id // Critical: assign owner from current user
+        ...gymData,
+        status: status,
+        ownerId: req.user._id
     });
 
     try {
