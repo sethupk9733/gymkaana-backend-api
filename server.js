@@ -47,17 +47,29 @@ app.get('/', (req, res) => {
     res.json({ message: 'Gymkaana API is healthy', status: 'online' });
 });
 
-// Routes
+// Core Routes (always required)
 app.use('/api/gyms', require('./routes/gymRoutes'));
 app.use('/api/plans', require('./routes/planRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/tickets', require('./routes/ticketRoutes'));
-app.use('/api/payouts', require('./routes/payoutRoutes'));
-app.use('/api/reviews', require('./routes/reviewRoutes'));
-app.use('/api/accounting', require('./routes/accountingRoutes'));
-app.use('/api/activities', require('./routes/activityRoutes'));
+
+// Extended Routes (load safely to prevent crashes if file is missing)
+const extendedRoutes = [
+    { path: '/api/tickets', file: './routes/ticketRoutes' },
+    { path: '/api/payouts', file: './routes/payoutRoutes' },
+    { path: '/api/reviews', file: './routes/reviewRoutes' },
+    { path: '/api/accounting', file: './routes/accountingRoutes' },
+    { path: '/api/activities', file: './routes/activityRoutes' },
+];
+extendedRoutes.forEach(({ path, file }) => {
+    try {
+        app.use(path, require(file));
+        console.log(`✅ Route loaded: ${path}`);
+    } catch (e) {
+        console.warn(`⚠️ Could not load route ${path}: ${e.message}`);
+    }
+});
 // 404 Handler for API routes
 app.use((req, res, next) => {
     res.status(404).json({ message: `Route ${req.originalUrl} not found on this server` });
