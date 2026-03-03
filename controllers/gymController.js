@@ -10,18 +10,50 @@ exports.getAllGyms = async (req, res) => {
 };
 
 exports.createGym = async (req, res) => {
-    console.log('🏗️ Incoming Gym Creation Request | Body Keys:', Object.keys(req.body), '| User:', req.user?._id);
+    console.log('🏗️ createGym called | Body Keys:', Object.keys(req.body), '| User ID:', req.user?._id);
+    console.log('🔍 req.body.name:', req.body.name, '| req.body.address:', req.body.address);
 
-    if (Object.keys(req.body).length === 0) {
-        return res.status(400).json({ message: 'Empty body received. Check Content-Type header and body parser.' });
+    // Guard: Ensure the body was actually parsed
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ message: 'Empty request body. Ensure Content-Type is application/json.' });
     }
 
-    const { status: rawStatus, ...gymData } = req.body;
-    const status = (rawStatus || 'pending').toLowerCase();
+    // Guard: Check required fields manually before hitting Mongoose
+    if (!req.body.name || String(req.body.name).trim() === '') {
+        return res.status(400).json({ message: 'Gym name is required.' });
+    }
+    if (!req.body.address || String(req.body.address).trim() === '') {
+        return res.status(400).json({ message: 'Gym address is required.' });
+    }
+
+    // Handle specializations: frontend may send a comma-separated string or an array
+    let specializations = req.body.specializations;
+    if (typeof specializations === 'string' && specializations.trim()) {
+        specializations = specializations.split(',').map(s => s.trim()).filter(Boolean);
+    } else if (!Array.isArray(specializations)) {
+        specializations = [];
+    }
+
+    const status = (req.body.status || 'pending').toLowerCase();
 
     const gym = new Gym({
-        ...gymData,
-        status: status,
+        name: String(req.body.name).trim(),
+        description: req.body.description || '',
+        address: String(req.body.address).trim(),
+        phone: req.body.phone || '',
+        email: req.body.email || '',
+        city: req.body.city || '',
+        zipCode: req.body.zipCode || '',
+        landmark: req.body.landmark || '',
+        googleMapsLink: req.body.googleMapsLink || '',
+        headTrainer: req.body.headTrainer || '',
+        experience: req.body.experience || '',
+        specializations,
+        openingHoursWeekdays: req.body.openingHoursWeekdays || '',
+        openingHoursWeekends: req.body.openingHoursWeekends || '',
+        facilities: Array.isArray(req.body.facilities) ? req.body.facilities : [],
+        image: req.body.image || '',
+        status,
         ownerId: req.user._id
     });
 

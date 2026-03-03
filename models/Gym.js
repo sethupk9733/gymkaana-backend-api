@@ -12,7 +12,7 @@ const gymSchema = new mongoose.Schema({
     googleMapsLink: { type: String },
     headTrainer: { type: String },
     experience: { type: String },
-    specializations: { type: String },
+    specializations: [{ type: String }],
     openingHoursWeekdays: { type: String },
     openingHoursWeekends: { type: String },
     facilities: [{ type: String }],
