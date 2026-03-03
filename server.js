@@ -53,6 +53,11 @@ app.use('/api/plans', require('./routes/planRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/tickets', require('./routes/ticketRoutes'));
+app.use('/api/payouts', require('./routes/payoutRoutes'));
+app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/accounting', require('./routes/accountingRoutes'));
+app.use('/api/activities', require('./routes/activityRoutes'));
 // 404 Handler for API routes
 app.use((req, res, next) => {
     res.status(404).json({ message: `Route ${req.originalUrl} not found on this server` });
