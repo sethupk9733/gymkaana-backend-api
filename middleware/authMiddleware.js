@@ -31,10 +31,15 @@ const protect = async (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
-    if (req.user && req.user.roles && req.user.roles.includes('admin')) {
+    const roles = (req.user && req.user.roles) ? req.user.roles.map(r => r.toLowerCase()) : [];
+    if (roles.includes('admin')) {
         return next();
     } else {
-        return res.status(401).json({ message: 'Not authorized as an admin' });
+        console.error('🛡️ Admin Check Failed | User:', req.user?._id, '| Roles:', req.user?.roles);
+        return res.status(403).json({
+            message: 'Not authorized as an admin',
+            userRoles: req.user?.roles
+        });
     }
 };
 

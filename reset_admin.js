@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const User = require('./models/User');
+const User = require('./models/User'); // Adjust path if needed
+const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
 async function resetAdmin() {
@@ -8,23 +9,34 @@ async function resetAdmin() {
         console.log('Connected to MongoDB');
 
         const email = 'admin@gymkaana.com';
-        const newPassword = 'Admin@gymkaana2026';
+        const password = 'Admin@gymkaana2026';
 
-        const user = await User.findOne({ email });
-        if (user) {
-            user.password = newPassword;
-            user.roles = ['admin'];
-            user.isVerified = true;
-            await user.save();
-            console.log(`Successfully reset password for: ${email}`);
-            console.log(`New Password is: ${newPassword}`);
+        let admin = await User.findOne({ email });
+
+        if (admin) {
+            console.log('Admin user found, updating password and roles...');
+            admin.password = password;
+            admin.roles = ['admin', 'user'];
+            admin.isVerified = true;
+            await admin.save();
+            console.log('Admin user updated successfully');
         } else {
-            console.log(`User ${email} not found.`);
+            console.log('Admin user not found, creating new...');
+            admin = new User({
+                name: 'System Admin',
+                email,
+                password,
+                roles: ['admin', 'user'],
+                isVerified: true
+            });
+            await admin.save();
+            console.log('Admin user created successfully');
         }
+
+        process.exit(0);
     } catch (err) {
-        console.error('Error:', err.message);
-    } finally {
-        await mongoose.disconnect();
+        console.error('Error reset admin:', err);
+        process.exit(1);
     }
 }
 
