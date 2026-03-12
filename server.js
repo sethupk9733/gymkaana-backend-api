@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 const app = express();
@@ -30,7 +31,9 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
-app.use(express.json());
+app.use(cookieParser());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -77,10 +80,17 @@ app.use((req, res, next) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
-    console.error('🔥 Global Error:', err.stack);
+    console.error('🔥 Global Error Hooked:', err.stack);
+
+    // Check for common errors that might cause 500
+    if (err.name === 'PayloadTooLargeError') {
+        return res.status(413).json({ message: 'Request payload too large. Please use smaller images.' });
+    }
+
     res.status(500).json({
         message: 'Internal Server Error',
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        error: process.env.NODE_ENV === 'development' || !process.env.NODE_ENV ? err.message : 'Server encountered an unexpected condition',
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
     });
 });
 

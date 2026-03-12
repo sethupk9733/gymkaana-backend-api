@@ -21,6 +21,12 @@ const gymSchema = new mongoose.Schema({
     members: { type: Number, default: 0 },
     ownerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     image: { type: String },
+    bankDetails: {
+        accountName: String,
+        accountNumber: String,
+        ifscCode: String,
+        bankName: String
+    },
     createdAt: { type: Date, default: Date.now }
 });
 
