@@ -10,11 +10,18 @@ exports.getAllGyms = async (req, res) => {
 };
 
 exports.createGym = async (req, res) => {
-    console.log('🏗️ createGym called | Body Keys:', Object.keys(req.body), '| User ID:', req.user?._id);
-    console.log('🔍 req.body.name:', req.body.name, '| req.body.address:', req.body.address);
+    console.log('🏗️ createGym called | Body Keys:', Object.keys(req.body));
+    console.log('👤 Authenticated User:', req.user?._id, 'Roles:', req.user?.roles);
+
+    // Guard: Ensure user is authenticated
+    if (!req.user || !req.user._id) {
+        console.error('❌ Authentication failure: req.user is missing');
+        return res.status(401).json({ message: 'User NOT identified. Please login again.' });
+    }
 
     // Guard: Ensure the body was actually parsed
     if (!req.body || Object.keys(req.body).length === 0) {
+        console.error('❌ Request body is empty');
         return res.status(400).json({ message: 'Empty request body. Ensure Content-Type is application/json.' });
     }
 
@@ -36,6 +43,8 @@ exports.createGym = async (req, res) => {
 
     const status = (req.body.status || 'pending').toLowerCase();
 
+    console.log('📝 Creating Gym document for:', req.body.name);
+
     const gym = new Gym({
         name: String(req.body.name).trim(),
         description: req.body.description || '',
@@ -43,16 +52,17 @@ exports.createGym = async (req, res) => {
         phone: req.body.phone || '',
         email: req.body.email || '',
         city: req.body.city || '',
-        zipCode: req.body.zipCode || '',
+        zipCode: req.body.zipCode || req.body.zip || '', // Handle both web and mobile keys
         landmark: req.body.landmark || '',
-        googleMapsLink: req.body.googleMapsLink || '',
+        googleMapsLink: req.body.googleMapsLink || req.body.location || '', // Handle location field from mobile
         headTrainer: req.body.headTrainer || '',
         experience: req.body.experience || '',
         specializations,
-        openingHoursWeekdays: req.body.openingHoursWeekdays || '',
+        openingHoursWeekdays: req.body.openingHoursWeekdays || req.body.timings || '', // Handle timings field from mobile
         openingHoursWeekends: req.body.openingHoursWeekends || '',
         facilities: Array.isArray(req.body.facilities) ? req.body.facilities : [],
-        image: req.body.image || '',
+        image: req.body.image || (Array.isArray(req.body.images) ? req.body.images[0] : ''), // Handle images array from mobile
+        bankDetails: req.body.bankDetails || {}, // Support bank details from mobile/web
         status,
         ownerId: req.user._id
     });
@@ -62,10 +72,11 @@ exports.createGym = async (req, res) => {
         console.log('✅ Gym saved successfully:', newGym._id);
         res.status(201).json(newGym);
     } catch (err) {
-        console.error('❌ Error saving gym:', err.message);
+        console.error('❌ Error saving gym to DB:', err.message);
         res.status(400).json({
             message: `Gym validation failed: ${err.message}`,
-            receivedBody: req.body // Send back what we received for debugging
+            details: err.errors, // Mongoose validation details
+            receivedBody: req.body
         });
     }
 };
