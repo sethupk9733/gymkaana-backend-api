@@ -44,9 +44,11 @@ exports.getStats = async (req, res) => {
 
         res.json({
             activeMembers: totalMembers[0]?.total || 0,
+            activeGyms: totalGyms,
             totalUsers,           // Real count of registered users
             totalRevenue: totalRevenue[0]?.total || 0,
             pendingGyms,
+            checkinsToday: 0,
             checkInsToday: 0,
             totalGyms
         });
