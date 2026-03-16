@@ -65,7 +65,8 @@ exports.createGym = async (req, res) => {
         openingHoursWeekdays: req.body.openingHoursWeekdays || req.body.timings || '', // Handle timings field from mobile
         openingHoursWeekends: req.body.openingHoursWeekends || '',
         facilities: Array.isArray(req.body.facilities) ? req.body.facilities : [],
-        image: req.body.image || (Array.isArray(req.body.images) ? req.body.images[0] : ''), // Handle images array from mobile
+        images: Array.isArray(req.body.images) ? req.body.images : (req.body.image ? [req.body.image] : []),
+        image: req.body.image || (Array.isArray(req.body.images) && req.body.images.length > 0 ? req.body.images[0] : ''),
         bankDetails: req.body.bankDetails || {}, // Support bank details from mobile/web
         status,
         ownerId: req.user._id
@@ -97,7 +98,15 @@ exports.getGymById = async (req, res) => {
 
 exports.updateGym = async (req, res) => {
     try {
-        const gym = await Gym.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updates = { ...req.body };
+        // Sync image fields if either is provided in the update
+        if (updates.images && Array.isArray(updates.images)) {
+            updates.image = updates.images[0] || '';
+        } else if (updates.image && typeof updates.image === 'string') {
+            updates.images = [updates.image];
+        }
+
+        const gym = await Gym.findByIdAndUpdate(req.params.id, updates, { new: true });
         if (!gym) return res.status(404).json({ message: 'Gym not found' });
         res.json(gym);
     } catch (err) {
