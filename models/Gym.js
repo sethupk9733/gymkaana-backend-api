@@ -28,6 +28,13 @@ const gymSchema = new mongoose.Schema({
         ifscCode: String,
         bankName: String
     },
+    gstNo: { type: String, default: "" },
+    panNo: { type: String, default: "" },
+    documentation: {
+        tradingLicense: { type: String, default: "" },
+        fireSafety: { type: String, default: "" },
+        insurancePolicy: { type: String, default: "" }
+    },
     createdAt: { type: Date, default: Date.now }
 });
 

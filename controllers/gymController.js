@@ -68,6 +68,13 @@ exports.createGym = async (req, res) => {
         images: Array.isArray(req.body.images) ? req.body.images : (req.body.image ? [req.body.image] : []),
         image: req.body.image || (Array.isArray(req.body.images) && req.body.images.length > 0 ? req.body.images[0] : ''),
         bankDetails: req.body.bankDetails || {}, // Support bank details from mobile/web
+        gstNo: req.body.gstNo || '',
+        panNo: req.body.panNo || '',
+        documentation: {
+            tradingLicense: req.body.documentation?.tradingLicense || req.body.tradingLicense || '',
+            fireSafety: req.body.documentation?.fireSafety || req.body.fireSafety || '',
+            insurancePolicy: req.body.documentation?.insurancePolicy || req.body.insurancePolicy || ''
+        },
         status,
         ownerId: req.user._id
     });
