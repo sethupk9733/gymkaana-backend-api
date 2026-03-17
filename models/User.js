@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     photo: String,
     profileImage: String,
     phoneNumber: String,
+    gender: String,
+    age: Number,
+    address: String,
+    occupation: String,
     isVerified: {
         type: Boolean,
         default: false

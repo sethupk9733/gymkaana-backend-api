@@ -281,11 +281,15 @@ exports.updateProfile = async (req, res) => {
         const user = await User.findById(req.user._id);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const { name, photo, phoneNumber, profileImage } = req.body;
+        const { name, photo, phoneNumber, profileImage, gender, age, address, occupation } = req.body;
         if (name) user.name = name;
         if (photo) user.photo = photo;
         if (phoneNumber) user.phoneNumber = phoneNumber;
         if (profileImage) user.profileImage = profileImage;
+        if (gender !== undefined) user.gender = gender;
+        if (age !== undefined) user.age = age;
+        if (address !== undefined) user.address = address;
+        if (occupation !== undefined) user.occupation = occupation;
 
         await user.save();
         res.json(user);
