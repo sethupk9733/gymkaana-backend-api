@@ -452,8 +452,12 @@ exports.getAllUsers = async (req, res) => {
                     phoneNumber: 1,
                     profileImage: 1,
                     createdAt: 1,
+                    gender: 1,
+                    age: 1,
+                    address: 1,
+                    occupation: 1,
                     bookingsCount: { $size: '$userBookings' },
-                    totalSpent: { $sum: '$userBookings.amount' },
+                    totalSpent: { $sum: '$userBookings.totalAmount' }, // Changed from amount to totalAmount to match schema
                     lastActive: { $max: '$userBookings.bookingDate' }
                 }
             },
