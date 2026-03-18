@@ -117,24 +117,33 @@ const getAdminAccountingData = async (req, res) => {
         const transactions = [];
 
         bookings.forEach(b => {
+            let status = 'Pending';
+            if (b.status === 'active' || b.status === 'completed') status = 'Completed';
+            else if (b.status === 'cancelled') status = 'Refunded';
+            else if (b.status === 'pending_refund') status = 'Pending Refund';
+            else if (b.status === 'rejected') status = 'Failed';
+
             transactions.push({
                 id: `TXN-${b._id.toString().slice(-7).toUpperCase()}`,
+                rawId: b._id,
                 user: b.userId?.name || b.memberName || 'Unknown User',
                 email: b.userId?.email || b.memberEmail || '',
                 gym: gymMap[b.gymId?.toString()] || 'Unknown Hub',
                 amount: b.amount,
                 date: new Date(b.bookingDate || b.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
                 time: new Date(b.bookingDate || b.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-                status: b.status === 'active' || b.status === 'completed' ? 'Completed' : b.status === 'cancelled' ? 'Refunded' : 'Pending',
+                status,
                 type: 'Booking',
                 method: 'UPI',
                 commission: b.amount * 0.15,
                 netPayout: b.amount * 0.85,
                 cancellationReason: b.cancellationReason,
                 cancellationDate: b.cancellationDate,
-                refundDetails: b.refundDetails
+                refundDetails: b.refundDetails,
+                rawDate: b.bookingDate || b.createdAt
             });
         });
+
 
         payouts.forEach(p => {
             transactions.push({
